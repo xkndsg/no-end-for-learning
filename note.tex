@@ -1,0 +1,404 @@
+%\documentclass{article}
+%\usepackage{amsmath, amssymb, amsthm}
+%\usepackage[utf8]{inputenc} % 支持中文
+%\usepackage[UTF8]{ctex}
+%\usepackage{xcolor}
+%\usepackage{tcolorbox}
+%\usepackage{fancyhdr} % 设置页眉页脚
+%\usepackage{tikz}
+%\usepackage{geometry}
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+%\usepackage{titlesec}
+%\geometry{a4paper, margin=2cm}
+%% 定义色彩方案
+%\definecolor{shadecolor}{rgb}{0.95, 0.95, 1}
+%\definecolor{theoremboxcolor}{rgb}{0.9, 0.95, 1}
+%\definecolor{algboxcolor}{rgb}{1.0, 0.92, 0.8}
+%% 设置页眉
+%\pagestyle{fancy}
+%\fancyhf{}
+%\lhead{\textbf{Kenan Xu}}
+%\rhead{\textbf{学海无涯}}
+%\renewcommand{\headrulewidth}{0.4pt}
+%\renewcommand{\footrulewidth}{0pt}
+%% 美化标题
+%%\titleformat{\section}{\Large\bfseries\color{blue}}{\thesection}{1em}{}
+%%\titleformat{\subsection}{\large\bfseries\color{teal}}{\thesubsection}{1em}{}
+%% 定理环境美化
+%\newtcolorbox{mytheorem}[1][]{colback=theoremboxcolor, colframe=blue!75!black, title=定理, #1}
+%\newtcolorbox{mydefinition}[1][]{colback=theoremboxcolor, colframe=blue!75!black, title=定义, #1}
+%\newtcolorbox{myproposition}[1][]{colback=theoremboxcolor, colframe=blue!75!black, title=命题, #1}
+%\newtcolorbox{myshadedbox}[1][]{colback=shadecolor, colframe=black!50, #1}
+%\newtcolorbox{myalgorithm}[1][]{colback=algboxcolor, colframe=orange!85!black, title=算法, #1}
+%% 定理、定义、引理和命题的定义
+%\newtheorem{theorem}{定理}
+%\newtheorem{definition}{定义}
+%\newtheorem{lemma}{引理}
+%\newtheorem{proposition}{命题}
+%\begin{document}
+%	\begin{center}
+%		{\LARGE \textbf{标题}}
+%	\end{center}
+%	\section*{引言}
+%	% 引言部分内容
+%	\section*{基本思想}
+%	% 基本思想部分内容
+%	\section*{几何解释}
+%	\begin{myshadedbox}
+%		% 几何解释的内容
+%	\end{myshadedbox}
+%	\begin{center}
+%		\begin{tikzpicture}[scale=1]
+%			% 在此处添加图示
+%		\end{tikzpicture}
+%	\end{center}
+%	\section*{算法介绍}
+%	\begin{myalgorithm}
+%		\begin{algorithm}[H]
+%			\caption{算法名称}
+%			\begin{algorithmic}[1]
+%				\STATE 初始化参数
+%				\FOR{循环条件}
+%				\STATE 计算某些值
+%				\IF{条件}
+%				\STATE 做一些事情
+%				\ENDIF
+%				\ENDFOR
+%			\end{algorithmic}
+%		\end{algorithm}
+%	\end{myalgorithm}
+%	\section*{收敛性分析}
+%	\begin{mytheorem}
+%		% 定理的描述和内容
+%	\end{mytheorem}
+%	\begin{proof}
+%		% 定理的证明过程
+%	\end{proof}
+%	\section*{方法比较}
+%	\begin{myshadedbox}
+%		% 对不同方法的比较内容
+%	\end{myshadedbox}
+%	\section*{应用与案例分析}
+%	% 应用和案例分析的内容
+%	\subsection*{案例：某某模型拟合}
+%	% 详细的案例分析内容
+%	\section*{总结}
+%	\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!75!black]
+%		% 总结部分的内容
+%	\end{tcolorbox}
+%\end{document}
+
+
+%Latex 模板 2
+\documentclass[a4paper, 12pt]{article}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage[utf8]{inputenc} % 支持中文
+\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{framed}
+\usepackage{fancyhdr}
+%%%%%%%%%%%%%%%%%%%%%Definition for Math Form %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\[{\begin{equation}}
+	\def\]{\end{equation}}
+\def\lb{\left(}
+\def\rb{\right)}
+\def\lno{\left\|}
+\def\rno{\right\|}
+\def\lbb{\left\{}
+\def\rbb{\right\}}
+\def\lzb{\left[}
+\def\rzb{\right]}
+\def\lang{\left\langle}
+\def\rang{\right\rangle}
+\def\argmin{\arg\min}
+\def\argmax{\arg\max}
+\def\shrink{{\rm shrink}}
+\def\prox{{\rm \bf prox}}
+\def\I{{\rm \bf I}}
+
+\def\be{\beta}
+\def\si{\sigma}
+\def\lam{\lambda}
+\def\tlam{\widetilde\lam}
+\def\blam{\bar\lam}
+\def\hlam{\widehat\lam}
+\def\tM{{\widetilde M}}
+
+\def\nn{\nonumber}
+\def\st{\hbox{s.t.}}
+\def\t{\top}
+
+\def\a{{\bm a}}
+\def\b{{\bm b}}
+\def\c{{\bm c}}
+\def\d{{\bm d}}
+\def\F{{\mathbf{F}}}
+\def\B{{\mathcal B}}
+\def\C{{\mathcal C}}
+\def\L{{\mathcal L}}
+\def\Q{{\mathcal Q}}
+\def\P{{\mathcal P}}
+\def\R{{\mathbb R}}
+\def\S{{\mathcal S}}
+\def\u{{\bm u}}
+\def\v{{\bm v}}
+\def\x{{\bm x}}
+\def\tx{{\widetilde \x}}
+\def\y{{\bm y}}
+\def\ty{{\widetilde \y}}
+\def\Z{{\mathcal Z}}
+\def\z{{\bm z}}
+\def\W{{\mathcal W}}
+\def\w{{{\bm w}}}
+\def\tw{{\widetilde \w}}
+\def\tu{{\widetilde \u}}
+\def\q{{{\bm q}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 设置页面布局
+\geometry{a4paper, left=2.2cm, right=2.2cm, top=2.5cm, bottom=3cm}
+\setlength{\headsep}{0.75in}
+% 定义色彩方案
+\definecolor{shadecolor}{rgb}{0.85, 0.95, 1} 
+\definecolor{theoremboxcolor}{rgb}{0.9, 0.95, 1}
+\definecolor{remarkboxcolor}{rgb}{1.0, 0.92, 0.8}
+\definecolor{hong}{RGB}{199,21,133}
+\definecolor{huang}{RGB}{255,164,0}
+\definecolor{analysisboxcolor}{rgb}{0.9, 0.9, 1}
+% 设置页眉
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Optimization}}
+\fancyhead[R]{\textbf{洗衣机}}
+% 设置页码显示
+\fancyfoot[C]{\thepage} % 页码居中显示在页脚
+\renewcommand{\headrulewidth}{0.4pt}
+% 美化标题
+\titleformat{\section}{\Large\bfseries\color{black}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{teal}}{\thesubsection}{1em}{}
+% 定理环境美化
+\newtcolorbox{mytheorem}[1][]{colback=theoremboxcolor, colframe=blue!75!black, title=定理, #1}
+\newtcolorbox{mydefinition}[1][]{colback=theoremboxcolor, colframe=blue!75!black, title=定义, #1}
+\newtcolorbox{myproposition}[1][]{colback=theoremboxcolor, colframe=blue!75!black, title=命题, #1}
+\newtcolorbox{myremark}[1][]{colback=remarkboxcolor, colframe=red!75!black,
+	title=Remark, #1}
+\newtcolorbox{myanalysis}[1][]{colback=analysisboxcolor, colframe=blue!55!black, title=\textbf{Analysis}, fonttitle=\bfseries, #1}
+% 算法框的美化
+\newtcolorbox{myalgorithm}[1][]{colback=remarkboxcolor, colframe=orange!85!black, title=算法, #1}
+% 定理环境
+\newtheorem{theorem}{定理}[section]
+\newtheorem{definition}{定义}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{proposition}{命题}[section]
+\newtheorem{corollary}{推论}[section]
+\newtheorem{remark}{备注}[section]
+\newtheorem{exer}{练习}[section]
+\newtheorem{que}{问题}[section]
+\newtheorem{example}{示例}[section]
+\newtheorem{property}{性质}[section]
+%封面
+\makeatletter
+\renewcommand*{\maketitle}{
+	\begin{titlepage}
+%		\pdfbookmark[1]{Cover}{cover}
+		\centering
+		%\scshape
+		\vspace*{5\baselineskip}
+%		\color{hong}
+		
+		%----- title -----
+		\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
+		\rule{\textwidth}{0.4pt}
+		
+		\vspace{0.75\baselineskip}
+		
+		{\LARGE\bfseries \@title}
+		
+		\vspace{0.75\baselineskip}
+		
+		\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+		\rule{\textwidth}{1.6pt}
+		
+		\vspace{4\baselineskip}
+		
+		%----- Author -----
+		{\Large \@author}
+		
+		\vspace{0.35\baselineskip}	
+		
+		%----- Date -----
+		{\Large \@date}
+		\vfill
+	\end{titlepage}
+}
+\makeatother
+\title{学海无涯苦作舟 \\[20pt]
+	\Large 优化记
+}
+\author{洗衣机}
+%\institute{}
+%\version{1.3}
+%\date{\zhtoday}
+\date{Last Update: \today}
+\begin{document}
+	\maketitle
+	\clearpage
+	% 目录页不显示页码
+	\pagenumbering{gobble}  % 禁用页码显示
+	\tableofcontents  % 生成目录
+	% 重新启用页码，从 1 开始
+    \clearpage
+    \pagenumbering{arabic}
+	\section{分式规划 (Fractional Programming): Dinkelbach 算法}
+	考虑如下问题
+	\[
+	\min_{x\in \S} F(x) = \frac{f(x)}{g(x)}
+	\]	
+	\begin{shaded}
+		\begin{algorithm}[H]
+			\caption{Dinkelbach 算法}
+		\begin{algorithmic}[1]
+%			\Require 目标函数 \( f(x) \)，约束条件 \( x \in X \)，精度阈值 \( \epsilon > 0 \)
+%			\Ensure 最优解 \( x^* \) 和最优值 \( \lambda^* \)
+			\State \textbf{Input:} 初始值 \( \lambda^{(0)} \in \mathbb{R} \), 迭代次数 \( k = 0 \), 约束条件 \( x \in \S \), 精度阈值 \( \epsilon > 0 \)
+			\State \textbf{Output:} 最优解 \( x^* \) 和最优值 \( \lambda^* \)
+			\Repeat
+			\State \textbf{Step 1:} 求解子问题：
+			\[
+			x^{(k)} = \arg \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
+			\]
+			\State \textbf{Step 2:} 计算：
+			\[
+			\phi(\lambda^{(k)}) = \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
+			\]
+			\State \textbf{Step 3:} 更新：
+			\[
+			\lambda^{(k+1)} = \frac{f(x^{(k)})}{g(x^{(k)})}
+			\]
+			\State 更新迭代次数： \( k \gets k + 1 \)
+			\Until \( \phi(\lambda^{(k)}) < \epsilon \)
+%			\State 输出最优解：\( x^* = x^{(k)} \)，最优值：\( \lambda^* = \lambda^{(k)} \)
+		\end{algorithmic}	
+		\end{algorithm}
+	\end{shaded}
+	\begin{property}
+	  $\phi$ 关于$\lambda$ 单调递减: \(\lambda_1<\lambda_2\Rightarrow \phi(\lambda_1)>\phi(\lambda_2).\)
+	\end{property}
+	\begin{property}
+		$\lambda = \lambda^*\Leftrightarrow \phi(\lambda)=0.$ 
+	\begin{proof}
+		\begin{itemize} 
+			\item[$(\Rightarrow): $] 令$\lambda=\lambda^*=F(x^*)=\frac{f(x^*)}{g(x^*)}.$
+			  $ \forall x \in \S, \lambda^*\leq \frac{f(x)}{g(x)}\Rightarrow f(x)-\lambda^*g(x)\geq 0$, 因此$x^*$恰好取到$\phi(\lambda^*)$的下界$0.$
+			  \item[$(\Leftarrow):$] 假设存在$\lambda^\prime=F(x^\prime)$ 是更优解, 因此$\lambda^\prime=\frac{f(x^\prime)}{g(x^\prime)}<\lambda\Rightarrow f(x^\prime)-\lambda g(x^\prime)<0,$ \\$ \mathrm{i.e.} \phi(\lambda)<0, $矛盾.
+		\end{itemize}
+	\end{proof}
+	\end{property}
+
+	% 标题部分
+	\newpage
+	\begin{center}
+		{\LARGE \textbf{2025年4月}}
+	\end{center}
+	% 基础信息框
+	\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!75!black, title=LectureInformation]
+		\textbf{Lecture Number: 2} \\
+		\textbf{Student: MIStalE} \\
+		\textbf{School: Fudan University} \\
+		\textbf{Course: Optimization} \\
+		\textbf{Date: Fall 2024}
+	\end{tcolorbox}
+	\section{Newton's Method}
+	假设 \( f(x) \) 是 \textit{两次连续可微的} 且 \textit{强凸}。那么可以用以下二次近似对\( f(x_{k+1}) \) 进行描述：
+	\[
+	f(x_{k+1})\approx f(x_k)+\nabla f(x_k)^T(x_{k+1}-x_k)+\frac{1}{2}(x_{k+1}-x_k)^T\nabla^2f(x_k)(x_{k+1}-x_k)
+	\]
+	令 \( p = x_{k+1} - x_k \)，我们最小化右边的二次近似得到一个近似的最优解\( x_{k+1} \)：\[
+	x_{k+1} = \arg\min_p \left[ f(x_k) + \nabla f(x_k)^T p + \frac{1}{2} p^T \nabla^2 f(x_k) p
+	\right] + x_k
+	\]
+	通过求解上式的最优 \( p \)，我们可以得到：
+	\[
+	\nabla f(x_k) + \nabla^2 f(x_k) p = 0. \]
+	\begin{myanalysis}
+		由于 \(\nabla^2 f(x_k)\) 是正定的，它是非奇异的。因此，牛顿法的更新为：\[
+		x_{k+1} = x_k - \nabla^2 f(x_k)^{-1} \nabla f(x_k). \]
+	\end{myanalysis}
+%	\begin{figure}[H]
+%		\centering
+%		\includegraphics[width=0.6\linewidth]{figure/newton_vs_gd.png}
+%		\caption{Comparison between Newton's method (blue) and the gradient descent
+%			method (black).}
+%		\label{fig:newton_convergence}
+%	\end{figure}
+	\begin{mytheorem}
+		\label{thm:newton_convergence}
+		设 \( f \) 是定义在 \( \mathbb{R}^n \) 上的两次连续可微的函数。假设以下条件成立：\begin{itemize}
+			\item \( f \) 是参数为 \( m \) 的强凸函数：存在 \( m > 0 \)，使得对任何\( x \in\mathbb{R}^n \)，有 \( \nabla^2 f(x) \succeq mI \)。
+			\item \( \nabla^2 f \) 是 Lipschitz 连续的，参数为 \( L \)：存在\( L > 0 \)，对任何\( x, y \in \mathbb{R}^n \)，有 \( \|\nabla^2 f(x) - \nabla^2 f(y)\| \leq L \|x - y\| \)。\end{itemize}
+		设 \( \{x_k\}_{k \geq 0} \) 为牛顿法生成的序列，且 \( x^* \) 是 \( f \) 在\( \mathbb{R}^n\)
+		上的唯一最小值。那么对于任意 \( k = 0, 1, \ldots \)，不等式
+		\[
+		\|x_{k+1} - x^*\| \leq \frac{L}{2m} \|x_k - x^*\|^2
+		\]
+		成立。此外，如果 \( \|x_0 - x^*\| \leq \frac{m}{L} \)，则有
+		\[
+		\|x_k - x^*\| \leq \frac{2m}{L} \left( \frac{1}{2} \right)^{2^k}. \]
+	\end{mytheorem}
+	\section{Damped Newton's Method}
+	尽管牛顿法具有快速收敛的特点，但它并不是一个通用的下降方法。在某些情况下，为了使牛顿法更稳定，我们引入一个步长来进行线搜索，从而得到所谓的阻尼牛顿法。以下是阻尼牛顿法的伪代码表示：
+	\begin{myalgorithm}
+	\begin{algorithm}[H]
+			\caption{算法名称}
+		\begin{algorithmic}[1]
+%			\Require 目标函数 \( f(x) \)，约束条件 \( x \in X \)，精度阈值 \( \epsilon > 0 \)
+%			\Ensure 最优解 \( x^* \) 和最优值 \( \lambda^* \)
+			\State \textbf{Input:} 目标函数 \( f(x) \)，约束条件 \( x \in X \)，精度阈值 \( \epsilon > 0 \)
+			\State \textbf{Output:} 最优解 \( x^* \) 和最优值 \( \lambda^* \)
+			\State 初始化：选择一个初始值 \( \lambda^{(0)} \in \mathbb{R} \)，设置迭代次数 \( k = 0 \)
+			
+			\Repeat
+			\State \textbf{Step 1:} 求解子问题：
+			\[
+			x^{(k)} = \arg \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
+			\]
+			
+			\State \textbf{Step 2:} 计算：
+			\[
+			\phi(\lambda^{(k)}) = \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
+			\]
+			
+			\State \textbf{Step 3:} 更新：
+			\[
+			\lambda^{(k+1)} = \frac{f(x^{(k)})}{g(x^{(k)})}
+			\]
+			
+			\State 更新迭代次数： \( k \gets k + 1 \)
+			
+			\Until \( \phi(\lambda^{(k)}) < \epsilon \)
+			
+			\State 输出最优解：\( x^* = x^{(k)} \)，最优值：\( \lambda^* = \lambda^{(k)} \)
+		\end{algorithmic}
+		\end{algorithm}
+		\end{myalgorithm}
+
+	\begin{myremark}
+		牛顿法在大规模优化问题中可能需要大量的存储和计算资源，这时我们可以利用稀疏矩阵的特性或使用共轭梯度法来求解线性系统，从而提高计算效率。
+	\end{myremark}
+	\section{总结}
+	\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!75!black, title=总结]
+		牛顿法是求解强凸函数最优化问题的有效方法，在初始点足够接近最优解时具有二次收敛的性质。然而，其计算复杂度较高，特别是在 Hessian 矩阵稠密或规模较大时。通过引入步长，阻尼牛顿法增强了牛顿法的鲁棒性，使其在较远的初始点也能稳定收敛。\end{tcolorbox}
+\end{document}
+
+
+
+
