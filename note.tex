@@ -104,12 +104,13 @@
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{titlesec}
+\usepackage{xcolor} 
 \usepackage{float}
 \usepackage{framed}
 \usepackage{fancyhdr}
 %%%%%%%%%%%%%%%%%%%%%Definition for Math Form %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\def\[{\begin{equation}}
-	\def\]{\end{equation}}
+\def\[{\begin{equation*}}
+\def\]{\end{equation*}}
 \def\lb{\left(}
 \def\rb{\right)}
 \def\lno{\left\|}
@@ -184,13 +185,14 @@
 \renewcommand{\headrulewidth}{0.4pt}
 % 美化标题
 \titleformat{\section}{\Large\bfseries\color{black}}{\thesection}{1em}{}
-\titleformat{\subsection}{\large\bfseries\color{teal}}{\thesubsection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{black}}{\thesubsection}{1em}{}
 % 定理环境美化
 \newtcolorbox{mytheorem}[1][]{colback=theoremboxcolor, colframe=blue!75!black, title=定理, #1}
 \newtcolorbox{mydefinition}[1][]{colback=theoremboxcolor, colframe=blue!75!black, title=定义, #1}
 \newtcolorbox{myproposition}[1][]{colback=theoremboxcolor, colframe=blue!75!black, title=命题, #1}
 \newtcolorbox{myremark}[1][]{colback=remarkboxcolor, colframe=red!75!black,
-	title=Remark, #1}
+title=Remark, #1}
+\newtcolorbox{myalert}[1][]{colback=red!15, colframe=red!75!black}
 \newtcolorbox{myanalysis}[1][]{colback=analysisboxcolor, colframe=blue!55!black, title=\textbf{Analysis}, fonttitle=\bfseries, #1}
 % 算法框的美化
 \newtcolorbox{myalgorithm}[1][]{colback=remarkboxcolor, colframe=orange!85!black, title=算法, #1}
@@ -205,44 +207,45 @@
 \newtheorem{que}{问题}[section]
 \newtheorem{example}{示例}[section]
 \newtheorem{property}{性质}[section]
+\newcommand{\alert}[1]{\textcolor{red}{\textbf{#1}}}
 %封面
 \makeatletter
 \renewcommand*{\maketitle}{
-	\begin{titlepage}
+\begin{titlepage}
 %		\pdfbookmark[1]{Cover}{cover}
-		\centering
-		%\scshape
-		\vspace*{5\baselineskip}
+\centering
+%\scshape
+\vspace*{5\baselineskip}
 %		\color{hong}
-		
-		%----- title -----
-		\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
-		\rule{\textwidth}{0.4pt}
-		
-		\vspace{0.75\baselineskip}
-		
-		{\LARGE\bfseries \@title}
-		
-		\vspace{0.75\baselineskip}
-		
-		\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
-		\rule{\textwidth}{1.6pt}
-		
-		\vspace{4\baselineskip}
-		
-		%----- Author -----
-		{\Large \@author}
-		
-		\vspace{0.35\baselineskip}	
-		
-		%----- Date -----
-		{\Large \@date}
-		\vfill
-	\end{titlepage}
+
+%----- title -----
+\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
+\rule{\textwidth}{0.4pt}
+
+\vspace{0.75\baselineskip}
+
+{\LARGE\bfseries \@title}
+
+\vspace{0.75\baselineskip}
+
+\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+\rule{\textwidth}{1.6pt}
+
+\vspace{4\baselineskip}
+
+%----- Author -----
+{\Large \@author}
+
+\vspace{0.35\baselineskip}	
+
+%----- Date -----
+{\Large \@date}
+\vfill
+\end{titlepage}
 }
 \makeatother
 \title{学海无涯苦作舟 \\[20pt]
-	\Large 优化篇
+\Large 优化篇
 }
 \author{洗衣机}
 %\institute{}
@@ -250,154 +253,753 @@
 %\date{\zhtoday}
 \date{Last Update: \today}
 \begin{document}
-	\maketitle
-	\clearpage
-	% 目录页不显示页码
-	\pagenumbering{gobble}  % 禁用页码显示
-	\tableofcontents  % 生成目录
-	% 重新启用页码，从 1 开始
-    \clearpage
-    \pagenumbering{arabic}
-	\section{分式规划 (Fractional Programming): Dinkelbach 算法}
-	考虑如下问题
+\maketitle
+\clearpage
+% 目录页不显示页码
+\pagenumbering{gobble}  % 禁用页码显示
+\tableofcontents  % 生成目录
+% 重新启用页码，从 1 开始
+\clearpage
+\pagenumbering{arabic}
+\section{概念$\&$定义}
+\begin{definition}[凸函数]\label{def:convex}
+	令 $\Omega\subset\mathbb R^n$ 为凸集，$\theta:\Omega\to\mathbb R$。若对任意 $u,v\in\Omega$ 和 $\lambda\in[0,1]$，都有
 	\[
-	\min_{x\in \S} F(x) = \frac{f(x)}{g(x)}
-	\]	
-	其中$f(x), g$ 是适当的闭凸函数, $g(x) > 0. $
-	\begin{shaded}
-		\begin{algorithm}[H]
-			\caption{Dinkelbach 算法}
-		\begin{algorithmic}[1]
-%			\Require 目标函数 \( f(x) \)，约束条件 \( x \in X \)，精度阈值 \( \epsilon > 0 \)
-%			\Ensure 最优解 \( x^* \) 和最优值 \( \lambda^* \)
-			\State \textbf{Input:} 初始值 \( \lambda^{(0)} \in \mathbb{R} \), 迭代次数 \( k = 0 \), 约束条件 \( x \in \S \), 精度阈值 \( \epsilon > 0 \)
-			\State \textbf{Output:} 最优解 \( x^* \) 和最优值 \( \lambda^* \)
-			\Repeat
-			\State \textbf{Step 1:} 求解子问题：
-			\[
-			x^{(k)} = \arg \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
-			\]
-			\State \textbf{Step 2:} 计算：
-			\[
-			\phi(\lambda^{(k)}) = \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
-			\]
-			\State \textbf{Step 3:} 更新：
-			\[
-			\lambda^{(k+1)} = \frac{f(x^{(k)})}{g(x^{(k)})}
-			\]
-			\State 更新迭代次数： \( k \gets k + 1 \)
-			\Until \( \phi(\lambda^{(k)}) < \epsilon \)
-%			\State 输出最优解：\( x^* = x^{(k)} \)，最优值：\( \lambda^* = \lambda^{(k)} \)
-		\end{algorithmic}	
-		\end{algorithm}
-	\end{shaded}
-	\begin{property}
-	  $\phi$ 关于$\lambda$ 单调递减: \(\lambda_1<\lambda_2\Rightarrow \phi(\lambda_1)>\phi(\lambda_2).\)
-	\end{property}
-	\begin{property}
-		$\lambda = \lambda^*\Leftrightarrow \phi(\lambda)=0.$ 
-	\begin{proof}
-		\begin{itemize} 
-			\item[$(\Rightarrow): $] 令$\lambda=\lambda^*=F(x^*)=\frac{f(x^*)}{g(x^*)}.$
-			  $ \forall x \in \S, \lambda^*\leq \frac{f(x)}{g(x)}\Rightarrow f(x)-\lambda^*g(x)\geq 0$, 因此$x^*$恰好取到$\phi(\lambda^*)$的下界$0.$
-			  \item[$(\Leftarrow):$] 假设存在$\lambda^\prime=F(x^\prime)$ 是更优解, 因此$\lambda^\prime=\frac{f(x^\prime)}{g(x^\prime)}<\lambda\Rightarrow f(x^\prime)-\lambda g(x^\prime)<0,$ \\$ \mathrm{i.e.} \phi(\lambda)<0, $矛盾.
-		\end{itemize}
-	\end{proof}
-	\end{property}
+	\theta\bigl(\lambda u + (1-\lambda) v\bigr)
+	\le \lambda\,\theta(u) + (1-\lambda)\,\theta(v),
+	\]
+	则称 $\theta$ 在 $\Omega$ 上为\emph{凸函数}。
+\end{definition}
 
-	% 标题部分
-	\newpage
-	\begin{center}
-		{\LARGE \textbf{2025年4月}}
-	\end{center}
-	% 基础信息框
-	\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!75!black, title=LectureInformation]
-		\textbf{Lecture Number: 2} \\
-		\textbf{Student: MIStalE} \\
-		\textbf{School: Fudan University} \\
-		\textbf{Course: Optimization} \\
-		\textbf{Date: Fall 2024}
-	\end{tcolorbox}
-	\section{Newton's Method}
-	假设 \( f(x) \) 是 \textit{两次连续可微的} 且 \textit{强凸}。那么可以用以下二次近似对\( f(x_{k+1}) \) 进行描述：
+\begin{definition}[严格凸函数]
+	在同样记号下，若对任意 $u,v\in\Omega$ 且 $u\neq v$，以及 $\lambda\in(0,1)$，严格不等式
 	\[
-	f(x_{k+1})\approx f(x_k)+\nabla f(x_k)^T(x_{k+1}-x_k)+\frac{1}{2}(x_{k+1}-x_k)^T\nabla^2f(x_k)(x_{k+1}-x_k)
+	\theta\bigl(\lambda u + (1-\lambda) v\bigr)
+	< \lambda\,\theta(u) + (1-\lambda)\,\theta(v)
 	\]
-	令 \( p = x_{k+1} - x_k \)，我们最小化右边的二次近似得到一个近似的最优解\( x_{k+1} \)：\[
-	x_{k+1} = \arg\min_p \left[ f(x_k) + \nabla f(x_k)^T p + \frac{1}{2} p^T \nabla^2 f(x_k) p
-	\right] + x_k
-	\]
-	通过求解上式的最优 \( p \)，我们可以得到：
+	成立，则称 $\theta$ 在 $\Omega$ 上为\emph{严格凸函数}。
+\end{definition}
+
+\begin{definition}[强凸函数]
+	若存在常数 $\sigma>0$，使得对任意 $u,v\in\Omega$ 和 $\lambda\in(0,1)$，
 	\[
-	\nabla f(x_k) + \nabla^2 f(x_k) p = 0. \]
-	\begin{myanalysis}
-		由于 \(\nabla^2 f(x_k)\) 是正定的，它是非奇异的。因此，牛顿法的更新为：\[
-		x_{k+1} = x_k - \nabla^2 f(x_k)^{-1} \nabla f(x_k). \]
-	\end{myanalysis}
-%	\begin{figure}[H]
-%		\centering
-%		\includegraphics[width=0.6\linewidth]{figure/newton_vs_gd.png}
-%		\caption{Comparison between Newton's method (blue) and the gradient descent
-%			method (black).}
-%		\label{fig:newton_convergence}
-%	\end{figure}
-	\begin{mytheorem}
-		\label{thm:newton_convergence}
-		设 \( f \) 是定义在 \( \mathbb{R}^n \) 上的两次连续可微的函数。假设以下条件成立：\begin{itemize}
-			\item \( f \) 是参数为 \( m \) 的强凸函数：存在 \( m > 0 \)，使得对任何\( x \in\mathbb{R}^n \)，有 \( \nabla^2 f(x) \succeq mI \)。
-			\item \( \nabla^2 f \) 是 Lipschitz 连续的，参数为 \( L \)：存在\( L > 0 \)，对任何\( x, y \in \mathbb{R}^n \)，有 \( \|\nabla^2 f(x) - \nabla^2 f(y)\| \leq L \|x - y\| \)。\end{itemize}
-		设 \( \{x_k\}_{k \geq 0} \) 为牛顿法生成的序列，且 \( x^* \) 是 \( f \) 在\( \mathbb{R}^n\)
-		上的唯一最小值。那么对于任意 \( k = 0, 1, \ldots \)，不等式
+	\theta\bigl(\lambda u + (1-\lambda) v\bigr)
+	\le \lambda\,\theta(u) + (1-\lambda)\,\theta(v)
+	- \frac{\sigma}{2}\,\lambda(1-\lambda)\,\|u-v\|^2,
+	\]
+	则称 $\theta$ 在 $\Omega$ 上为\emph{强凸函数}。
+\end{definition}
+
+\begin{remark}
+	由上述定义可知：
+	\[
+	\text{强凸}\;\Longrightarrow\;\text{严格凸}\;\Longrightarrow\;\text{凸}.
+	\]
+\end{remark}
+
+\begin{definition}[可微凸函数的梯度不等式]
+	若 $\theta$ 在 $\Omega$ 上可微，则对任意 $u,v\in\Omega$ 有
+	\[
+	\theta(u)\ge \theta(v) + \nabla\theta(v)^{T}(u-v)
+	\]
+	当且仅当 $\theta$ 为凸函数。
+\end{definition}
+
+\begin{definition}[次梯度与次微分]
+	令 $\theta:\Omega\to\mathbb R$，$\Omega$ 凸。若对于某向量 $s\in\mathbb R^n$，对任意 $u\in\Omega$，都有
+	\[
+	\theta(u)\ge \theta(v) + s^{T}(u-v),
+	\]
+	则称 $s$ 为 $\theta$ 在 $v\in\Omega$ 处的\emph{次梯度}（Subgradient）。所有次梯度构成的集合称为 $\theta$ 在 $v$ 处的\emph{次微分}（Subdifferential），记为 $\partial\theta(v)$。
+\end{definition}
+
+\begin{definition}[Lipschitz 连续]
+	令 $F:\Omega\to\mathbb R^m$。若存在常数 $L>0$，使得对所有 $u,v\in\Omega$，
+	\[
+	\|F(u)-F(v)\|\le L\,\|u-v\|,
+	\]
+	则称 $F$ 在 $\Omega$ 上为\emph{Lipschitz 连续}（Lipschitz continuous）。
+\end{definition}
+
+\begin{definition}[算子类型]\label{def:operator-types}
+	令 $\Omega\subset\mathbb R^n$ 为凸集，$F:\Omega\to\mathbb R^n$ 为映射；亦令 $(\mathcal{H},\|\cdot\|)$ 为实 Hilbert 空间，$T:\mathcal{H}\to\mathcal{H}$。则：
+	
+	\begin{enumerate}
+		\item （单调算子 Monotone）若对任意 $u,v\in\Omega$ 有
 		\[
-		\|x_{k+1} - x^*\| \leq \frac{L}{2m} \|x_k - x^*\|^2
+		(u-v)^\top\bigl[F(u)-F(v)\bigr]\ge0,
 		\]
-		成立。此外，如果 \( \|x_0 - x^*\| \leq \frac{m}{L} \)，则有
+		则称 $F$ 在 $\Omega$ 上为单调算子；
+		
+		\item （严格单调算子 Strictly Monotone）若对任意 $u,v\in\Omega,\ u\neq v$ 有
 		\[
-		\|x_k - x^*\| \leq \frac{2m}{L} \left( \frac{1}{2} \right)^{2^k}. \]
-	\end{mytheorem}
-	\section{Damped Newton's Method}
-	尽管牛顿法具有快速收敛的特点，但它并不是一个通用的下降方法。在某些情况下，为了使牛顿法更稳定，我们引入一个步长来进行线搜索，从而得到所谓的阻尼牛顿法。以下是阻尼牛顿法的伪代码表示：
-	\begin{myalgorithm}
-	\begin{algorithm}[H]
-			\caption{算法名称}
-		\begin{algorithmic}[1]
+		(u-v)^\top\bigl[F(u)-F(v)\bigr]>0,
+		\]
+		则称 $F$ 为严格单调算子；
+		
+		\item （强单调算子 Strongly Monotone）若存在 $\eta>0$ 使得对任意 $u,v\in\Omega$，
+		\[
+		(u-v)^\top\bigl[F(u)-F(v)\bigr]\ge \eta\|u-v\|^2,
+		\]
+		则称 $F$ 为强单调算子；
+		
+		\item （伪单调算子 Pseudo–monotone）若对任意 $u,v\in\Omega$，
+		\[
+		(u-v)^\top F(v)\ge0
+		\;\Longrightarrow\;
+		(u-v)^\top F(u)\ge0,
+		\]
+		则称 $F$ 为伪单调算子；
+		
+		\item （余强制算子 Co–coercive）若存在 $\mu>0$ 使得对任意 $u,v\in\Omega$，
+		\[
+		(u-v)^\top\bigl[F(u)-F(v)\bigr]\ge \mu\|F(u)-F(v)\|^2,
+		\]
+		则称 $F$ 为余强制算子；
+		
+		\item （非扩张算子 Nonexpansive）若对任意 $x,y\in\mathcal{H}$ 有
+		\[
+		\|T(x)-T(y)\|\le \|x-y\|,
+		\]
+		则称 $T$ 为非扩张算子；
+		
+		\item （严格非扩张算子 Strictly Nonexpansive）若存在 $\rho\in[0,1)$ 使得对任意 $x,y\in\mathcal{H}$，
+		\[
+		\|T(x)-T(y)\|\le \rho\,\|x-y\|,
+		\]
+		则称 $T$ 为严格非扩张算子；
+		
+		\item （$\alpha$-平均算子 $\alpha$-Averaged）若存在 $\alpha\in(0,1)$ 与非扩张算子 $N$ 使得
+		\[
+		T = (1-\alpha)\,I + \alpha\,N,
+		\]
+		则称 $T$ 为 $\alpha$-平均算子。
+	\end{enumerate}
+\end{definition}
+\newpage
+\section{分式规划 (Fractional Programming): Dinkelbach 算法}
+考虑如下问题
+\[
+\min_{x\in \S} F(x) = \frac{f(x)}{g(x)}
+\]	
+其中$f(x), g$ 是适当的闭凸函数, $g(x) > 0. $
+\begin{shaded}
+\begin{algorithm}[H]
+\caption{Dinkelbach 算法}
+\begin{algorithmic}[1]
 %			\Require 目标函数 \( f(x) \)，约束条件 \( x \in X \)，精度阈值 \( \epsilon > 0 \)
 %			\Ensure 最优解 \( x^* \) 和最优值 \( \lambda^* \)
-			\State \textbf{Input:} 目标函数 \( f(x) \)，约束条件 \( x \in X \)，精度阈值 \( \epsilon > 0 \)
-			\State \textbf{Output:} 最优解 \( x^* \) 和最优值 \( \lambda^* \)
-			\State 初始化：选择一个初始值 \( \lambda^{(0)} \in \mathbb{R} \)，设置迭代次数 \( k = 0 \)
-			
-			\Repeat
-			\State \textbf{Step 1:} 求解子问题：
-			\[
-			x^{(k)} = \arg \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
-			\]
-			
-			\State \textbf{Step 2:} 计算：
-			\[
-			\phi(\lambda^{(k)}) = \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
-			\]
-			
-			\State \textbf{Step 3:} 更新：
-			\[
-			\lambda^{(k+1)} = \frac{f(x^{(k)})}{g(x^{(k)})}
-			\]
-			
-			\State 更新迭代次数： \( k \gets k + 1 \)
-			
-			\Until \( \phi(\lambda^{(k)}) < \epsilon \)
-			
-			\State 输出最优解：\( x^* = x^{(k)} \)，最优值：\( \lambda^* = \lambda^{(k)} \)
-		\end{algorithmic}
-		\end{algorithm}
-		\end{myalgorithm}
+\State \textbf{Input:} 初始值 \( \lambda^{(0)} \in \mathbb{R} \), 迭代次数 \( k = 0 \), 约束条件 \( x \in \S \), 精度阈值 \( \epsilon > 0 \)
+\State \textbf{Output:} 最优解 \( x^* \) 和最优值 \( \lambda^* \)
+\Repeat
+\State \textbf{Step 1:} 求解子问题：
+\[
+x^{(k)} = \arg \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
+\]
+\State \textbf{Step 2:} 计算：
+\[
+\phi(\lambda^{(k)}) = \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
+\]
+\State \textbf{Step 3:} 更新：
+\[
+\lambda^{(k+1)} = \frac{f(x^{(k)})}{g(x^{(k)})}
+\]
+\State 更新迭代次数： \( k \gets k + 1 \)
+\Until \( \phi(\lambda^{(k)}) < \epsilon \)
+%			\State 输出最优解：\( x^* = x^{(k)} \)，最优值：\( \lambda^* = \lambda^{(k)} \)
+\end{algorithmic}	
+\end{algorithm}
+\end{shaded}
+\begin{property}
+$\phi$ 关于$\lambda$ 单调递减: \(\lambda_1<\lambda_2\Rightarrow \phi(\lambda_1)>\phi(\lambda_2).\)
+\end{property}
+\begin{property}
+$\lambda = \lambda^*\Leftrightarrow \phi(\lambda)=0.$ 
+\begin{proof}
+\begin{itemize} 
+\item[$(\Rightarrow): $] 令$\lambda=\lambda^*=F(x^*)=\frac{f(x^*)}{g(x^*)}.$
+$ \forall x \in \S, \lambda^*\leq \frac{f(x)}{g(x)}\Rightarrow f(x)-\lambda^*g(x)\geq 0$, 因此$x^*$恰好取到$\phi(\lambda^*)$的下界$0.$
+\item[$(\Leftarrow):$] 假设存在$\lambda^\prime=F(x^\prime)$ 是更优解, 因此$\lambda^\prime=\frac{f(x^\prime)}{g(x^\prime)}<\lambda\Rightarrow f(x^\prime)-\lambda g(x^\prime)<0,$ \\$ \mathrm{i.e.} \phi(\lambda)<0, $矛盾.
+\end{itemize}
+\end{proof}
+\end{property}
+\section{酉不变性}
+\begin{myalert}
+酉矩阵保持内积不变
+\end{myalert}
+\begin{shaded}
+\begin{itemize}
+\item 酉矩阵保持向量范数不变;
+\item 酉相似变换不改变矩阵的谱（特征值、奇异值）;
+\end{itemize}
+\end{shaded}
+矩阵的F范数可以用奇异值刻画，因此也是酉不变的。
 
-	\begin{myremark}
-		牛顿法在大规模优化问题中可能需要大量的存储和计算资源，这时我们可以利用稀疏矩阵的特性或使用共轭梯度法来求解线性系统，从而提高计算效率。
-	\end{myremark}
-	\section{总结}
-	\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!75!black, title=总结]
-		牛顿法是求解强凸函数最优化问题的有效方法，在初始点足够接近最优解时具有二次收敛的性质。然而，其计算复杂度较高，特别是在 Hessian 矩阵稠密或规模较大时。通过引入步长，阻尼牛顿法增强了牛顿法的鲁棒性，使其在较远的初始点也能稳定收敛。\end{tcolorbox}
+矩阵的诱导2范数等价于矩阵的谱半径，因此也是酉不变的。
+\section{变分不等式}
+\begin{shaded}
+要证明变分不等式问题 \(\text{VI}(F, \mathbb{R}^n_+)\) 与互补问题  
+\[
+u \geq 0, \quad F(u) \geq 0, \quad u^T F(u) = 0
+\]  
+的等价性，我们需要分别证明两个方向的蕴含关系。
+
+**1. 变分不等式 \(\Rightarrow\) 互补问题**
+假设 \(u\) 是 \(\text{VI}(F, \mathbb{R}^n_+)\) 的解，即  
+\[
+\forall v \in \mathbb{R}^n_+, \quad (v - u)^T F(u) \geq 0.
+\]  
+需要证明 \(u\) 满足互补问题的三个条件。
+
+**(1) 非负性 \(u \geq 0\) 和 \(F(u) \geq 0\)**
+- 由于 \(\mathbb{R}^n_+\) 是可行域，显然 \(u \geq 0\)。
+- 取 \(v = u + e_i\)（其中 \(e_i\) 是第 \(i\) 个单位向量），则 \(v \in \mathbb{R}^n_+\)，代入变分不等式得  
+\[
+(v - u)^T F(u) = e_i^T F(u) = F_i(u) \geq 0.
+\]  
+这对所有 \(i\) 成立，故 \(F(u) \geq 0\)。
+
+**(2) 正交性 \(u^T F(u) = 0\)**
+- 取 \(v = 0\)，代入变分不等式得  
+\[
+(0 - u)^T F(u) = -u^T F(u) \geq 0 \quad \Rightarrow \quad u^T F(u) \leq 0.
+\]  
+- 取 \(v = 2u\)，代入得  
+\[
+(2u - u)^T F(u) = u^T F(u) \geq 0.
+\]  
+- 结合两者，得 \(u^T F(u) = 0\)。
+
+综上，\(\text{VI}(F, \mathbb{R}^n_+)\) 的解 \(u\) 满足互补问题。
+
+---
+
+**2. 互补问题 \(\Rightarrow\) 变分不等式**
+假设 \(u\) 满足互补问题  
+\[
+u \geq 0, \quad F(u) \geq 0, \quad u^T F(u) = 0,
+\]  
+需要证明 \(u\) 是 \(\text{VI}(F, \mathbb{R}^n_+)\) 的解。
+
+对任意 \(v \in \mathbb{R}^n_+\)，有  
+\[
+(v - u)^T F(u) = v^T F(u) - u^T F(u) = v^T F(u).
+\]  
+由于 \(v \geq 0\) 且 \(F(u) \geq 0\)，故 \(v^T F(u) \geq 0\)。因此  
+\[
+(v - u)^T F(u) \geq 0,
+\]  
+即 \(u\) 满足变分不等式。
+
+---
+
+**结论**
+变分不等式 \(\text{VI}(F, \mathbb{R}^n_+)\) 和互补问题  
+\[
+u \geq 0, \quad F(u) \geq 0, \quad u^T F(u) = 0
+\]  
+在解集上完全等价。
+\end{shaded}
+\newpage
+\section{凸的等价刻画}
+\begin{shaded}
+可微函数 $\theta(\cdot)$ 在非空凸集 $\Omega$ 上是凸的, 当且仅当其梯度 $\nabla\theta(\cdot)$ 是一个单调算子, 即对 $\nabla\theta(\cdot)$ 满足:
+
+$$
+(u-v)^T(\nabla\theta(u)-\nabla\theta(v)) \geq 0, \quad \forall u,\; v \in \Omega.
+$$ 
+\alert{证明关键在于将$\theta(u+t(u-v))$视作一元函数}
+
+类似地, $\theta(\cdot)$ 是严格凸的等价于 $\nabla\theta(\cdot)$ 是严格单调的; $\theta(\cdot)$ 是强凸的等价于 $\nabla\theta$ 是强单调的. 但需要注意的是, 若一个映射 $F(\cdot)$ 是单调的, 我们并不能直接得到 $F(\cdot)$ 是某一凸函数 $\theta(\cdot)$ 的梯度; 其他情况也是类似的.
+\end{shaded}
+\newpage
+\section{理论依据：梯度下降为何一定下降？}
+\begin{definition}[下降方向]
+设 $f: \mathbb{R}^n \rightarrow \mathbb{R}$ 是定义在 $\mathbb{R}^n$ 上的连续可微函数。如果向量 $0 \neq \mathbf{d} \in \mathbb{R}^n$ 在点 $\mathbf{x}$ 处的函数 $f$ 的方向导数 $f'(\mathbf{x}; \mathbf{d})$ 是负的，即
+
+$$
+f'(\mathbf{x}; \mathbf{d}) = \nabla f(\mathbf{x})^T \mathbf{d} < 0,
+$$ 
+则称 $\mathbf{d}$ 是 $f$ 在 $\mathbf{x}$ 处的下降方向。
+\begin{myalert}
+下降方向是梯度下降的理论基础。
+\end{myalert}
+\end{definition}
+\begin{shaded}
+\begin{lemma}[下降方向的下降性质]
+设 $f$ 是定义在 $\mathbb{R}^n$ 上的连续可微函数，且 $\mathbf{x} \in \mathbb{R}^n$。假设 $\mathbf{d}$ 是 $f$ 在 $\mathbf{x}$ 处的下降方向。则存在 $\varepsilon > 0$ 使得
+
+$$
+f(\mathbf{x} + t\mathbf{d}) < f(\mathbf{x})
+$$ 
+对任意 $t \in (0, \varepsilon]$ 成立。
+\end{lemma}
+\begin{proof}
+由于 $f'(\mathbf{x}; \mathbf{d}) < 0$，根据方向导数的定义，有
+
+$$
+\lim_{t \to 0^+} \frac{f(\mathbf{x} + t\mathbf{d}) - f(\mathbf{x})}{t} = f'(\mathbf{x}; \mathbf{d}) < 0.
+$$ 
+因此，存在 $\varepsilon > 0$ 使得
+
+$$
+\frac{f(\mathbf{x} + t\mathbf{d}) - f(\mathbf{x})}{t} < 0
+$$ 
+对任意 $t \in (0, \varepsilon]$ 成立，这直接意味着所需的结果。
+\end{proof}
+\end{shaded}
+\newpage
+\section{优化算法收敛性证明的两类方法}
+\subsection{不动点类}
+\begin{theorem}[Banach不动点定理] 设 $(X, d)$ 是一个完备度量空间，$T: X \to X$ 是一个压缩映射，即存在常数 $0 \leq c < 1$，使得对任意 $x, y \in X$，有
+    \[
+    d(T(x), T(y)) \leq c \cdot d(x, y).
+    \]
+    则 $T$ 在 $X$ 上存在唯一的不动点 $x^* \in X$，即 $T(x^*) = x^*$。此外，对任意初始点 $x_0 \in X$，迭代序列 $x_{n+1} = T(x_n)$ 将以指数速度收敛到 $x^*$，即
+    \[
+    d(x_n, x^*) \leq \frac{c^n}{1-c} d(x_1, x_0).
+    \]
+\end{theorem}
+Banach不动点定理给了我们设计算法的思路。 首先我们考虑单个函数的优化问题
+\begin{equation}\label{eq:opt_problem}
+\min f(x)
+\end{equation}
+这里我们假设$f(x)$ 是一个连续可微的函数。那么上述问题的解$x^*$就满足
+\[
+\nabla f(x^*) = 0
+\]
+如果我们想设计一个不动点迭代算法来求解这个问题，我们可以考虑构造一个映射$T(x)$，使得
+\[
+T(x^*) = x^*
+\]
+那么这个$T$就应该是
+\[
+T = Id()-\nabla f()\]
+我们期待按照算法$$x_{k+1} = T(x_k)$$迭代的序列$x_k$会收敛到$x^*$。因此，我们需要做的就是验证$T$是一个压缩映射。我们可以通过计算
+\begin{equation}\label{eq:T}
+    \begin{aligned}
+     \|T(x) - T(y)\|^2 
+        = &\|x - y - \nabla f(x) + \nabla f(y)\|^2 \\
+        \leq& \|x - y\|^2 + \| \nabla f(x) - \nabla f(y)\|^2-2\langle x - y, \nabla f(x) - \nabla f(y)\rangle
+    \end{aligned}
+\end{equation}
+对于一般的函数$f(x)$并不会使得$ T$满足压缩性质。因此，我们需要对$f(x)$做一些假设。比如说存在$\mu>0, L>0$使得
+\begin{align}
+    \| \nabla f(x) - \nabla f(y)\|^2 \leq L\|x - y\|^2\label{eq:f1}\\
+    \langle x - y, \nabla f(x) - \nabla f(y)\rangle \geq \mu\|x - y\|^2\label{eq:f2}
+\end{align}
+于是\eqref{eq:T}就变成了
+\begin{equation}
+    d(T(x), T(y))^2 \leq (1 - 2\mu + L)\|x - y\|^2
+\end{equation}
+那么我们就得到下面定理
+\begin{theorem}
+设$f(x)$满足\eqref{eq:f1}和\eqref{eq:f2}，并且$2\mu-1\leq L\leq 2\mu$，那么$T(x)=x-\nabla f(x)$是一个压缩映射。并且对于任意的$x_0$，迭代序列
+\[x_{k+1} = T(x_k)\]收敛到$x^*$。
+\end{theorem}
+\begin{remark}
+    很容易看出\eqref{eq:f1}和\eqref{eq:f2}分别对应于Lipschitz连续性和单调性。也就是说我们可以通过对函数的Lipschitz连续性和强单调性来设计一个不动点迭代算法来求解优化问题。同时不动点迭代就是梯度下降法。类似的，牛顿法也可以理解为不动点迭代。
+\end{remark}
+接下来我们考虑一个更一般的优化问题
+\begin{equation}\label{eq:opt_problem}
+\min f(x) + g(x)
+\end{equation}
+为了重点关注算法设计思路，我们假设$f,g$都是足够光滑的。因此最优解满足
+\begin{equation}\label{eq:Compound optimization}
+    \nabla f(x^*) + \nabla g(x^*) = 0
+\end{equation}
+根据上式，我们要将$x^*$设计为函数的不动点。下面有两种设计方式。
+\begin{itemize}
+    \item (Forward-Barckward Splitting) 从\eqref{eq:Compound optimization}出发，我们可以将其改写为
+    \[\nabla f(x^*) = -\nabla g(x^*),\]
+    这就给了我们一个设计的思路。我们可以将其改写为
+    \[
+    x^*+\nabla f(x^*) = x^*-\nabla g(x^*),
+    \]
+    进一步
+    \[
+    x^* = (I+\nabla f )^{-1}(I-\nabla g)(x^*),
+    \]
+    于是我们定义
+    \[
+    T(x) = (I+\nabla f )^{-1}(I-\nabla g)(x),
+    \]
+    这样我们就得到了一个不动点迭代算法
+    \[
+    x_{k+1} = (I+\nabla f )^{-1}(I-\nabla g)(x_k).
+    \]
+    引入中间变量$y_k = (I-\nabla g)(x_k)$，我们可以得到
+    \begin{align}
+       & y_{k+1} = (I-\nabla g)(x_k)\label{fbs1}\\
+        &x_{k+1} = (I+\nabla f )^{-1}y_{k+1}.\label{fbs2}
+    \end{align}
+    这就是经典的FBS算法. 可以看出\eqref{fbs1}是对$g$作梯度下降，而\eqref{fbs2}是找到沿着$f$作梯度上升后是$y_{k+1}$的点。我们可以将其理解为一个前向后向的迭代算法。
+    \item (Peaceman -Rachford Splitting)
+    \begin{equation}
+        \begin{aligned}
+            0=\nabla f(x) + \nabla g(x)\Longleftrightarrow& 0 = (I+\alpha \nabla f)x -(I-\alpha \nabla g)x\\
+            \Longleftrightarrow& 0 = (I+\alpha \nabla g)x - R_{\alpha \nabla g}(I+\alpha \nabla g)x, \ R_{\alpha \nabla g}=2(I+\alpha \nabla g)^{-1}-I\\
+            \Longleftrightarrow& 0 = (I+\alpha \nabla f)x - R_{\alpha \nabla g}z ,\  z = (I+\alpha \nabla g)x \\
+            \Longleftrightarrow& R_{\alpha \nabla g}z = (I+\alpha \nabla f)J_{\alpha \nabla g}z , \ x=J_{\alpha \nabla g}z\\
+            \Longleftrightarrow& J_{\alpha\nabla f}R_{\alpha \nabla g}z = J_{\alpha \nabla g}z\\
+            \Longleftrightarrow& J_{\alpha\nabla f}R_{\alpha \nabla g}z = \frac{R_{\alpha \nabla g}+I}{2}z\\
+            \Longleftrightarrow& 2J_{\alpha\nabla f}R_{\alpha \nabla g}z-R_{\alpha \nabla g}z= z\\
+            \Longleftrightarrow& R_{\alpha\nabla f}R_{\alpha \nabla g}z= z
+        \end{aligned}
+    \end{equation}
+    \item (Douglas-Rachford Splitting) 
+    \begin{equation}
+        \begin{aligned}
+            0=\nabla f(x) + \nabla g(x)&\Longleftrightarrow(\frac{R_{\alpha\nabla f}R_{\alpha \nabla g}}{2}+\frac{1}{2})z= z\\
+           &  \Longleftrightarrow z = J_{\alpha \nabla f}(2J_{\alpha\nabla g}-I)z +(I-J_{\alpha\nabla g})z
+        \end{aligned}
+    \end{equation}
+\end{itemize}
+\subsection{能量函数类}
+首先还是考虑单个函数的优化问题
+\begin{equation}\label{eq:opt_problem}
+\min f(x)
+\end{equation}
+假设\(x^*\)是最优解，为了证明算法迭代的收敛性，我们需要找到一个能量函数（一般称为Lyapunov函数），它刻画了当前迭代点和最优解之间的距离, 我们将能量函数记作$E(x^*,x^k)$并且要求
+\begin{itemize}
+    \item $E(x^*,x^k) \geq 0$;
+    % \item $E(x^*,x^k) = 0$ 当且仅当$x^k = x^*$;
+    \item $E(x^*,x^{k+1}) < E(x^*,x^k)$.
+\end{itemize}
+那么我们的算法就是在收敛的。
+
+常见的能量函数有
+\begin{itemize}
+    \item (1) $E(x^*,x^k) = \|x^k - x^*\|^2$;
+    \item (2) $E(x^*,x^k) = f(x^k) - f(x^*)$;
+    \item (3) $E(x^*,x^k) = f(x^*) - f(x^k) -\langle\nabla f(x^k),x^*-x^k \rangle $, Bregman 距离.
+\end{itemize}
+\begin{remark}
+    能量函数的选择考验直觉和经验。
+\end{remark}
+\newpage
+\section{Douglas-Rachford 分裂算法的等价形式}
+\begin{align}
+	0 &= \nabla f(x) + \nabla g(x) \notag \\
+	\Longleftrightarrow\quad& 0 = (I+\alpha \nabla f)x -(I-\alpha \nabla g)x \notag \\
+	\Longleftrightarrow\quad& 0 = (I+\alpha \nabla g)x - R_{\alpha \nabla g}(I+\alpha \nabla g)x, \quad R_{\alpha \nabla g}=2(I+\alpha \nabla g)^{-1}-I \notag \\
+	\Longleftrightarrow\quad& 0 = (I+\alpha \nabla f)x - R_{\alpha \nabla g}z ,\quad  z = (I+\alpha \nabla g)x \notag \\
+	\Longleftrightarrow\quad& R_{\alpha \nabla g}z = (I+\alpha \nabla f)J_{\alpha \nabla g}z ,\quad  x=J_{\alpha \nabla g}z \text{可以称为解映射} \notag \\
+	\Longleftrightarrow\quad& J_{\alpha\nabla f}R_{\alpha \nabla g}z = J_{\alpha \nabla g}z \notag \\
+	\Longleftrightarrow\quad& J_{\alpha\nabla f}R_{\alpha \nabla g}z = \frac{R_{\alpha \nabla g}+I}{2}z \notag \\
+	\Longleftrightarrow\quad& 2J_{\alpha\nabla f}R_{\alpha \nabla g}z - R_{\alpha \nabla g}z= z \notag \\
+	\Longleftrightarrow\quad& R_{\alpha\nabla f}R_{\alpha \nabla g}z= z\notag\\
+	\Longleftrightarrow\quad&\left(\frac{R_{\alpha\nabla f}R_{\alpha \nabla g}}{2}+\frac{1}{2}\right)z= z\notag\\
+	\Longleftrightarrow \quad&z = J_{\alpha \nabla f}(2J_{\alpha\nabla g}-I)z +(I-J_{\alpha\nabla g})z
+\end{align}
+\begin{enumerate}
+	\item $z_{k+1} = T (z_k)$, 其中$T = \frac{R_{\alpha\nabla f}R_{\alpha \nabla g}}{2}+\frac{1}{2}$\\
+	\item $z_{k+1} = J_{\alpha \nabla f}(2J_{\alpha\nabla g}-I)z +(I-J_{\alpha\nabla g})z_k$ \\
+	\item $z_{k+1} = z_k + \prox_{\alpha f} (2\prox_{\alpha g}(z_k)-z_k)-\prox_{\alpha g}(z_k)$\\
+	\item $z_{k+1} = (I+\alpha \partial f)^{-1}[(I-\alpha\partial f)(I+\alpha\partial g)^{-1}+\alpha\partial f]z_k$\\
+	\item $x_{k+1} = J_{\alpha \partial f}\left[J_{\alpha \partial g}(I-\alpha \partial f)+\alpha \partial f\right]x_k$
+\end{enumerate}
+\noindent
+以上等价形式从不同角度揭示了 Douglas-Rachford 分裂方法的结构本质：既可以理解为两次反射的组合，也可以视为近端算子的协调操作，进而统一了最优化中的投影法、变分不等式法与不动点迭代法。
+\subsection{收敛性分析}
+
+DR 方法可以看成是一个不动点迭代，因此要证明收敛性，我们需要证明以下两个结论：
+\begin{enumerate}
+	\item $y_k$ 收敛到 $F(y)$ 的不动点 $y^*$
+	\item $x_{k+1} = \prox_{f}(z_k)$ 收敛到 $x^* = \prox_{f}(z^*)$
+\end{enumerate}
+
+在证明收敛性之前，需要先定义两个映射：
+\[
+\begin{aligned}
+	F(z) &= z + \prox_g\bigl(2\prox_f(z) - z\bigr) - \prox_f(z),\\
+	G(z) &= z - F(z)
+	= \prox_f(z) - \prox_g\bigl(2\prox_f(z) - z\bigr).
+\end{aligned}
+\]
+我们要用到这两个函数的 {\bf firmly nonexpansive}（co-coercive with parameter 1）性质：
+\[
+\begin{aligned}
+	(F(z) - F(\hat z))^T (z - \hat z) &\ge \|F(z) - F(\hat z)\|_2^2,
+	&&\forall\,z,\hat z,\\
+	(G(z) - G(\hat z))^T (z - \hat z) &\ge \|G(z) - G(\hat z)\|_2^2,
+	&&\forall\,z,\hat z.
+\end{aligned}
+\]
+
+\begin{proof}[证明]
+	令 $x = \prox_f(z)$, $\hat x = \prox_f(\hat z)$,  
+	\[
+	\nu = \prox_g(2x - z),\quad \hat\nu = \prox_g(2\hat x - \hat z).
+	\]
+	则根据
+	\[
+	F(z) = z + \nu - x,\quad F(\hat z) = \hat z + \hat\nu - \hat x
+	\]
+	有
+	\[
+	\begin{aligned}
+		(F(z) - F(\hat z))^\top(z - \hat z)
+		&\leq (z + \nu - x - \hat z - \hat\nu + \hat x)^\top(z - \hat z)  -(x - \hat x)^\top(z-\hat z) +\|x-\hat x\|^2\\
+		&= (\nu - \hat\nu)^T(z - \hat z) + \|z - x - (\hat z - \hat x)\|_2^2\\
+		&=(v-\hat v)^\top(2x-z-2\hat x+\hat z) - \|v-\hat v\|^2 +\|F(z)-F(\hat z)\|^2 \\
+		&\ge \|F(z) - F(\hat z)\|_2^2,
+	\end{aligned}
+	\]
+	其中最后一步用到了 $\prox_f, \prox_g$ 算子的 firm nonexpansiveness 性质：
+	\[
+	(x - \hat x)^T(z - \hat z)\ge \|x - \hat x\|_2^2,\qquad
+	(2x - z - 2\hat x + \hat z)^T(\nu - \hat\nu)\ge \|\nu - \hat\nu\|_2^2.
+	\]
+	同理可证 $G$ 的 firm nonexpansiveness 性质。证毕。
+\end{proof}
+
+然后我们可以根据以下的不动点迭代公式证明前面提到的收敛性：
+\[
+z_{k+1} = (1-\rho_k)\,z_k + \rho_k\,F(z_k)
+= z_k - \rho_k\,G(z_k),
+\]
+其中需假设 $F$ 的不动点存在，且满足 $0\in \partial f(x^*)+\partial g(x^*)$，以及松弛参数
+\[
+\rho_k\in [\rho_{\min},\rho_{\max}],\quad
+0<\rho_{\min}<\rho_{\max}<2.
+\]
+
+\begin{proof}[证明]
+	设 $z^*$ 为 $F(z)$ 的不动点（也即 $G(z)$ 的零点），考虑 $\{z_k\}$ 步进化：
+	\[
+	\|z_{k+1}-z^*\|_2^2 - \|z_k-z^*\|_2^2
+	= 2(z_{k+1}-z_k)^T(z_k-z^*) + \|z_{k+1}-z_k\|_2^2.
+	\]
+	带入 $z_{k+1}=z_k-\rho_k\,G(z_k)$，并利用 $G$ 的 firm nonexpansiveness，可得
+	\[
+	\|z_{k+1}-z^*\|_2^2
+	\le -\rho_k(2-\rho_k)\|G(z_k)\|_2^2
+	\le -M\|G(z_k)\|_2^2,
+	\]
+	其中 $M = \rho_{\min}(2-\rho_{\max})>0$。上述不等式说明
+	\[
+	M\sum_{k=0}^\infty \|G(z_k)\|_2^2 \le \|z_0-z^*\|_2^2,\quad
+	\|G(z_k)\|\to 0.
+	\]
+	还可以得到 $\|z_k - z^*\|_2$ 是单调不增的，因此有界。再由 $\|z_k - z^*\|_2$ 单调不增、故极限 $\lim_{k\to\infty}\|z_k-z^*\|_2$ 存在，又由于有界, 故存在收敛子序列。
+	
+	记 $\bar z$ 为一个收敛子序列收敛到的极限点，根据 $G$ 的连续性有
+	\[
+	0 = \lim_{k\to\infty} G(z_{k_j}) = G(\bar z),
+	\]
+	即 $\bar z$ 是 $G$ 的零点，且极限 $\lim_{k\to\infty}\|z_{k_j}-z^*\|_2$ 存在。
+	
+	接着需要证明唯一性。假设 $\bar z,\hat z$ 是两个不同的极限点，收敛极限
+	\[
+	\lim_{k\to\infty}\|z_k-\bar z\|_2,\quad
+	\lim_{k\to\infty}\|z_k-\hat z\|_2
+	\]
+	都存在，因此
+	\[
+	\|\bar z-\hat z\|_2
+	= \lim_{k\to\infty}\|z_k-\hat z\|_2
+	= \lim_{k\to\infty}\|z_k-\bar z\|_2 = 0.
+	\]
+	从而 $\bar z = \hat z$，即极限唯一。
+\end{proof}
+\begin{shaded}
+	\begin{itemize}
+		\item Fejér 单调性蕴含 $\{x_k\}$ 有界，且对于任意 $p\in C$，距离序列 $\{\|x_k-p\|\}$ 收敛；  
+		\item 结合 Bolzano–Weierstrass 引理（有界序列存在收敛子列）与极限点唯一性，可推出全序列收敛，且其极限落在 $C$ 中的某一点。		
+	\end{itemize}
+\end{shaded}
+\newpage
+\section{Scaling 缩放技巧}
+\newpage
+\section{Kurdyka-Łojasiewicz 条件}
+KL 条件是用于分析非凸优化问题中算法收敛性的强有力工具，尤其在凸但不可微或非凸优化问题中起着核心作用。KL 条件本质上是函数在临界点附近的一种“渐进良性行为”的刻画。
+
+\begin{definition}[KL 函数]
+设 $\phi:\mathbb{R}^n\rightarrow(-\infty,+\infty]$ 是下半连续的，并且在某点 $x^*$ 附近是有限值。若存在：
+\begin{itemize}
+  \item 一个邻域 $U$ 使得 $x^*\in U$；
+  \item 一个常数 $\eta \in (0,+\infty]$；
+  \item 一个函数 $\varphi \in \Phi_\eta$，其中
+  \[
+  \Phi_\eta := \left\{ \varphi\in C^0([0,\eta)) \cap C^1((0,\eta)) \mid \varphi(0)=0,\ \varphi'>0 \right\};
+  \]
+\end{itemize}
+使得对于所有 $x \in U$ 满足 $x \neq x^*$ 且 $\phi(x^*) < \phi(x) < \phi(x^*)+\eta$，都有
+\[
+\varphi'(\phi(x) - \phi(x^*)) \cdot \|\partial \phi(x)\| \geq 1,
+\]
+其中 $\partial \phi(x)$ 表示 Clarke 次微分或 Fréchet 次微分。
+
+则称 $\phi$ 在 $x^*$ 附近满足 \textbf{KL 条件}。
+\end{definition}
+
+\begin{remark}
+KL 条件并不要求目标函数是凸的或光滑的，只要满足一定的“正则性”。很多常见的非凸函数，如半代数函数（polynomial, piecewise linear, $\ell_1$范数等）都满足 KL 条件。
+\end{remark}
+
+% \begin{theorem}[KL 条件与收敛性]
+% 设 $\{x^k\}$ 是通过某种下降方法产生的序列，满足：
+% \begin{itemize}
+%   \item $\phi(x^{k+1}) \leq \phi(x^k)$；
+%   \item $\exists \sigma>0,\ \|x^{k+1} - x^k\| \geq \sigma \cdot \|\partial \phi(x^{k+1})\|$；
+%   \item $\phi$ 在极限点 $x^*$ 满足 KL 条件。
+% \end{itemize}
+% 则序列 $\{x^k\}$ 收敛到 $x^*$，且收敛速度由 KL 函数 $\varphi$ 控制。
+% \end{theorem}
+
+
+\begin{example}[KL 函数的形式]
+常用的 KL 函数 $\varphi(s)$ 形式如下：
+\[
+\varphi(s) = c s^{1-\theta},\quad \theta \in [0,1),\ c>0.
+\]
+这种形式能反映不同类型的收敛速度：
+\begin{itemize}
+  \item $\theta = 0$ 时：有限步收敛；
+  \item $\theta \in (0, \frac{1}{2}]$：线性收敛；
+  \item $\theta \in (\frac{1}{2}, 1)$：亚线性收敛。
+\end{itemize}
+\end{example}
+
+\begin{remark}
+如果一个优化问题的目标函数满足 KL 条件，并且算法具有适当的下降性质，则可以几乎自动推导出全局收敛性和速率。
+\end{remark}
+在基于 KL 性质证明迭代算法收敛性的过程中，通常需要借助以下三个关键不等式：
+
+\begin{enumerate}
+    \item \textbf{KL 不等式（梯度模长 $\geq$ 目标函数值下降量）}：
+    \[
+    \|\nabla f(x_k)\| \geq \varphi'\left(f(x_k) - f^*\right),
+    \]
+    其中 $\varphi$ 是 KL 函数，$f^*$ 表示目标函数的极小值。该不等式表明，当函数值靠近极小值时，梯度趋于零。
+    
+    \item \textbf{充分下降}：
+    \[
+    |f(x_k) - f(x_{k+1})| \geq \alpha \|x_k - x_{k+1}\|^2,
+    \]
+    其中 $\alpha > 0$ 是某个固定常数。此不等式说明函数值在每次迭代中具有充分下降性，是算法收敛的重要依据。
+    
+    \item \textbf{梯度模长估计}：
+    \[
+    \|x_k - x_{k+1}\| \geq \beta \|\nabla f(x_k)\|,
+    \]
+    其中 $\beta > 0$ 是某个固定常数。该不等式用于连接变量变化幅度与梯度大小，从而与 KL 不等式结合，形成收敛性的闭环链式估计。
+\end{enumerate}
+\newpage
+\section{Farkas 引理}
+\textbf{Farkas 引理}是凸分析、线性规划和优化理论中的基础结果，描述了线性系统可行性的一种二择一关系。
+
+\begin{lemma}[Farkas 引理，标准版]
+	设 $A \in \mathbb{R}^{m\times n}$，$b \in \mathbb{R}^m$。  
+	恰好有且只有以下两种情况之一成立：
+	\begin{enumerate}
+		\item 存在 $x \in \mathbb{R}^n$，使得 $Ax = b$ 且 $x \geq 0$；
+		\item 存在 $y \in \mathbb{R}^m$，使得 $A^T y \geq 0$ 且 $b^T y < 0$。
+	\end{enumerate}
+\end{lemma}
+
+\textbf{直观理解：}
+\begin{itemize}
+	\item 要么系统 $Ax = b$, $x \geq 0$ 有解；
+	\item 要么存在一个向量 $y$，作为“证伪者”，证明无解。
+\end{itemize}
+
+本质上反映了凸集的“要么有交集，要么可以被超平面严格分开”的原理。
+
+% 标题部分
+%\newpage
+%\begin{center}
+%{\LARGE \textbf{2025年4月}}
+%\end{center}
+%% 基础信息框
+%\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!75!black, title=LectureInformation]
+%\textbf{Lecture Number: 2} \\
+%\textbf{Student: MIStalE} \\
+%\textbf{School: Fudan University} \\
+%\textbf{Course: Optimization} \\
+%\textbf{Date: Fall 2024}
+%\end{tcolorbox}
+%\section{Newton's Method}
+%假设 \( f(x) \) 是 \textit{两次连续可微的} 且 \textit{强凸}。那么可以用以下二次近似对\( f(x_{k+1}) \) 进行描述：
+%\[
+%f(x_{k+1})\approx f(x_k)+\nabla f(x_k)^T(x_{k+1}-x_k)+\frac{1}{2}(x_{k+1}-x_k)^T\nabla^2f(x_k)(x_{k+1}-x_k)
+%\]
+%令 \( p = x_{k+1} - x_k \)，我们最小化右边的二次近似得到一个近似的最优解\( x_{k+1} \)：\[
+%x_{k+1} = \arg\min_p \left[ f(x_k) + \nabla f(x_k)^T p + \frac{1}{2} p^T \nabla^2 f(x_k) p
+%\right] + x_k
+%\]
+%通过求解上式的最优 \( p \)，我们可以得到：
+%\[
+%\nabla f(x_k) + \nabla^2 f(x_k) p = 0. \]
+%\begin{myanalysis}
+%由于 \(\nabla^2 f(x_k)\) 是正定的，它是非奇异的。因此，牛顿法的更新为：\[
+%x_{k+1} = x_k - \nabla^2 f(x_k)^{-1} \nabla f(x_k). \]
+%\end{myanalysis}
+%%	\begin{figure}[H]
+%%		\centering
+%%		\includegraphics[width=0.6\linewidth]{figure/newton_vs_gd.png}
+%%		\caption{Comparison between Newton's method (blue) and the gradient descent
+%%			method (black).}
+%%		\label{fig:newton_convergence}
+%%	\end{figure}
+%\begin{mytheorem}
+%\label{thm:newton_convergence}
+%设 \( f \) 是定义在 \( \mathbb{R}^n \) 上的两次连续可微的函数。假设以下条件成立：\begin{itemize}
+%\item \( f \) 是参数为 \( m \) 的强凸函数：存在 \( m > 0 \)，使得对任何\( x \in\mathbb{R}^n \)，有 \( \nabla^2 f(x) \succeq mI \)。
+%\item \( \nabla^2 f \) 是 Lipschitz 连续的，参数为 \( L \)：存在\( L > 0 \)，对任何\( x, y \in \mathbb{R}^n \)，有 \( \|\nabla^2 f(x) - \nabla^2 f(y)\| \leq L \|x - y\| \)。\end{itemize}
+%设 \( \{x_k\}_{k \geq 0} \) 为牛顿法生成的序列，且 \( x^* \) 是 \( f \) 在\( \mathbb{R}^n\)
+%上的唯一最小值。那么对于任意 \( k = 0, 1, \ldots \)，不等式
+%\[
+%\|x_{k+1} - x^*\| \leq \frac{L}{2m} \|x_k - x^*\|^2
+%\]
+%成立。此外，如果 \( \|x_0 - x^*\| \leq \frac{m}{L} \)，则有
+%\[
+%\|x_k - x^*\| \leq \frac{2m}{L} \left( \frac{1}{2} \right)^{2^k}. \]
+%\end{mytheorem}
+%\section{Damped Newton's Method}
+%尽管牛顿法具有快速收敛的特点，但它并不是一个通用的下降方法。在某些情况下，为了使牛顿法更稳定，我们引入一个步长来进行线搜索，从而得到所谓的阻尼牛顿法。以下是阻尼牛顿法的伪代码表示：
+%\begin{myalgorithm}
+%\begin{algorithm}[H]
+%\caption{算法名称}
+%\begin{algorithmic}[1]
+%%			\Require 目标函数 \( f(x) \)，约束条件 \( x \in X \)，精度阈值 \( \epsilon > 0 \)
+%%			\Ensure 最优解 \( x^* \) 和最优值 \( \lambda^* \)
+%\State \textbf{Input:} 目标函数 \( f(x) \)，约束条件 \( x \in X \)，精度阈值 \( \epsilon > 0 \)
+%\State \textbf{Output:} 最优解 \( x^* \) 和最优值 \( \lambda^* \)
+%\State 初始化：选择一个初始值 \( \lambda^{(0)} \in \mathbb{R} \)，设置迭代次数 \( k = 0 \)
+%
+%\Repeat
+%\State \textbf{Step 1:} 求解子问题：
+%\[
+%x^{(k)} = \arg \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
+%\]
+%
+%\State \textbf{Step 2:} 计算：
+%\[
+%\phi(\lambda^{(k)}) = \max_{x \in X} \bigl\{ f(x) - \lambda^{(k)} g(x) \bigr\}
+%\]
+%
+%\State \textbf{Step 3:} 更新：
+%\[
+%\lambda^{(k+1)} = \frac{f(x^{(k)})}{g(x^{(k)})}
+%\]
+%
+%\State 更新迭代次数： \( k \gets k + 1 \)
+%
+%\Until \( \phi(\lambda^{(k)}) < \epsilon \)
+%
+%\State 输出最优解：\( x^* = x^{(k)} \)，最优值：\( \lambda^* = \lambda^{(k)} \)
+%\end{algorithmic}
+%\end{algorithm}
+%\end{myalgorithm}
+%
+%\begin{myremark}
+%牛顿法在大规模优化问题中可能需要大量的存储和计算资源，这时我们可以利用稀疏矩阵的特性或使用共轭梯度法来求解线性系统，从而提高计算效率。
+%\end{myremark}
+%\section{总结}
+%\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!75!black, title=总结]
+%牛顿法是求解强凸函数最优化问题的有效方法，在初始点足够接近最优解时具有二次收敛的性质。然而，其计算复杂度较高，特别是在 Hessian 矩阵稠密或规模较大时。通过引入步长，阻尼牛顿法增强了牛顿法的鲁棒性，使其在较远的初始点也能稳定收敛。\end{tcolorbox}
 \end{document}
 
 
