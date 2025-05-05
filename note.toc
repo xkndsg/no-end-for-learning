@@ -4,11 +4,12 @@
 \contentsline {section}{\numberline {4}变分不等式}{4}{section.4}%
 \contentsline {section}{\numberline {5}凸的等价刻画}{6}{section.5}%
 \contentsline {section}{\numberline {6}理论依据：梯度下降为何一定下降？}{7}{section.6}%
-\contentsline {section}{\numberline {7}优化算法收敛性证明的两类方法}{8}{section.7}%
+\contentsline {section}{\numberline {7}优化算法收敛性证明框架的两类方法}{8}{section.7}%
 \contentsline {subsection}{\numberline {7.1}不动点类}{8}{subsection.7.1}%
 \contentsline {subsection}{\numberline {7.2}能量函数类}{10}{subsection.7.2}%
 \contentsline {section}{\numberline {8}Douglas-Rachford 分裂算法的等价形式}{11}{section.8}%
 \contentsline {subsection}{\numberline {8.1}收敛性分析}{11}{subsection.8.1}%
-\contentsline {section}{\numberline {9}Scaling 缩放技巧}{14}{section.9}%
-\contentsline {section}{\numberline {10}Kurdyka-Łojasiewicz 条件}{15}{section.10}%
-\contentsline {section}{\numberline {11}Farkas 引理}{17}{section.11}%
+\contentsline {section}{\numberline {9}全序列收敛的常用技巧}{14}{section.9}%
+\contentsline {section}{\numberline {10}Scaling 缩放技巧}{15}{section.10}%
+\contentsline {section}{\numberline {11}Kurdyka-Łojasiewicz 条件}{16}{section.11}%
+\contentsline {section}{\numberline {12}Farkas 引理}{18}{section.12}%

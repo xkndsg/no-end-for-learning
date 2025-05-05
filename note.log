@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.11.25)  4 MAY 2025 16:59
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.11.25)  4 MAY 2025 22:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1127,11 +1127,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [10]
-Underfull \hbox (badness 10000) in paragraph at lines 696--697
-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 697--698
 
  []
@@ -1143,6 +1138,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 698--699
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 699--700
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 700--701
 
  []
 
@@ -1173,6 +1173,14 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [13]
+Missing character: There is no   (U+2009) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no   (U+2009) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no   (U+2009) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no   (U+2009) in font [lmroman12-regular]:mapping=t
+ex-text;!
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1183,10 +1191,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [14]
 
-LaTeX Font Warning: Font shape `TU/SimSun(0)/b/it' undefined
-(Font)              using `TU/SimSun(0)/b/n' instead on input line 834.
-
-
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
 (fancyhdr)                \setlength{\headheight}{14.49998pt}.
@@ -1195,6 +1199,10 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [15]
+
+LaTeX Font Warning: Font shape `TU/SimSun(0)/b/it' undefined
+(Font)              using `TU/SimSun(0)/b/n' instead on input line 884.
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1212,15 +1220,30 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[17] (./note.aux)
+[17]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[18] (./note.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package rerunfilecheck Info: File `note.out' has not changed.
-(rerunfilecheck)             Checksum: F68FAEF989C7F0BBF9BD02CB5DDEC0DE;1830.
+
+Package rerunfilecheck Warning: File `note.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `note.out':
+(rerunfilecheck)             Before: 079A9BF44EB4862BDD3A81E26A43C6BD;1971
+(rerunfilecheck)             After:  3561A37D02C06A28D9D831A20996D7AE;1971.
  ) 
 Here is how much of TeX's memory you used:
  27389 strings out of 476683
@@ -1231,4 +1254,4 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  99i,12n,104p,447b,560s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on note.pdf (19 pages).
+Output written on note.pdf (20 pages).
